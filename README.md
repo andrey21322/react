@@ -6,4 +6,4 @@ write to console npm install
 
 open second terminal 
 
-and here write npm run server
+and there write npm run server

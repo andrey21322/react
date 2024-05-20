@@ -137,22 +137,22 @@ const Cart = () => {
                 <div>
                   {cartItem.name}
                 </div>
-                <button onClick={() => handleEdit(cartItem.id, cartItem.name)}>Edit</button>
+                <button className="add-btn-edit" onClick={() => handleEdit(cartItem.id, cartItem.name)}>Edit</button>
               </div>
-              <div className='flex jcsb'>
-                <button onClick={() => handleDecrement(cartItem.id)}>-</button>
+              <div className='flex jcsb mt'>
+                <button className="add-btn a" onClick={() => handleDecrement(cartItem.id)}>-</button>
                 <div>{cartItem.amount}</div>
-                <button onClick={() => handleIncrement(cartItem.id)}>+</button>
+                <button className="add-btn a" onClick={() => handleIncrement(cartItem.id)}>+</button>
               </div>
             </div>
             <div className='cart-cost'>
               $ {cartItem.cost * cartItem.amount}
-              <button onClick={() => handleRemove(cartItem.id)}>Delete</button>
+              <button className="add-btn-dark" onClick={() => handleRemove(cartItem.id)}>Delete</button>
               </div>
             {isModalOpen && editItemId === cartItem.id && (
               <div className="modal">
                 <input type="text" value={editItemName} onChange={(e) => setEditItemName(e.target.value)} />
-                <button onClick={handleSubmitEdit}>Save</button>
+                <button className="add-btn" onClick={handleSubmitEdit}>Save</button>
               </div>
             )}
           </div>

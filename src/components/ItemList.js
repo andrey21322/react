@@ -1,58 +1,83 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchItems } from '../slices/itemsSlice'
-import { updateItemInDB, addItemToCart } from '../slices/cartSlice'
-import { removeItemFromCart } from '../slices/cartSlice'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchItems } from '../slices/itemsSlice';
+import { updateItemInDB, addItemToCart, updateCartItemAmount, removeItemFromCart } from '../slices/cartSlice';
 
 const ItemList = () => {
-  const dispatch = useDispatch()
-  const items = useSelector((state) => state.items.items)
-  const [filteredItems, setFilteredItems] = useState([])
-  const [filter, setFilter] = useState(null)
-  const cart = useSelector((state) => state.cart)
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.items.items);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [filter, setFilter] = useState(null);
+  const cart = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(fetchItems())
-  }, [dispatch])
+    dispatch(fetchItems());
+  }, [dispatch]);
 
   useEffect(() => {
     if (items.length > 0) {
-      const filtered = filter ? items.filter((item) => item.category === filter) : items
-      setFilteredItems(filtered)
+      const filtered = filter ? items.filter((item) => item.category === filter) : items;
+      setFilteredItems(filtered);
     }
-  }, [items, filter])
+  }, [items, filter]);
+
+  const isInCart = (itemId) => {
+    return cart.some(cartItem => cartItem.id === itemId);
+  };
 
   const handleIncrement = async (item) => {
-    const updatedItem = { ...item, amount: item.amount + 1 }
-    await dispatch(updateItemInDB(updatedItem))
-    updateLocalItem(updatedItem)
-    
-    if (updatedItem.amount === 1) {
-      dispatch(addItemToCart(updatedItem)) 
+    const updatedItem = { ...item, amount: item.amount + 1 };
+  
+    try {
+      // Dispatch action to update item in the database
+      await dispatch(updateItemInDB(updatedItem));
+  
+      if (isInCart(item.id)) {
+        // If item is in the cart, update its amount
+        await dispatch(updateCartItemAmount({ itemToUpdate: updatedItem, amount: updatedItem.amount }));
+      } else {
+        // If item is not in the cart, add it to the cart
+        await dispatch(addItemToCart(updatedItem));
+      }
+  
+      // Update local state after successful operations
+      setFilteredItems(prevItems => prevItems.map(itm => itm.id === updatedItem.id ? updatedItem : itm));
+    } catch (error) {
+      console.error("Error while handling increment:", error);
+      // Handle error if necessary
     }
-  }
-
+  };
+  
   const handleDecrement = async (item) => {
-    const updatedItem = { ...item, amount: item.amount - 1 }
     if (item.amount > 0) {
-      await dispatch(updateItemInDB(updatedItem))
-      updateLocalItem(updatedItem)
+      const updatedItem = { ...item, amount: item.amount - 1 };
+  
+      try {
+        // Dispatch action to update item in the database
+        await dispatch(updateItemInDB(updatedItem));
+  
+        if (updatedItem.amount > 0) {
+          // If item amount is greater than 0, update its amount in the cart
+          await dispatch(updateCartItemAmount({ itemToUpdate: updatedItem, amount: updatedItem.amount }));
+        } else {
+          // If item amount becomes 0, remove it from the cart
+          await dispatch(removeItemFromCart(updatedItem));
+        }
+  
+        // Update local state after successful operations
+        setFilteredItems(prevItems => prevItems.map(itm => itm.id === updatedItem.id ? updatedItem : itm));
+      } catch (error) {
+        console.error("Error while handling decrement:", error);
+        // Handle error if necessary
+      }
     }
-    if (updatedItem.amount === 0) {
-      dispatch(removeItemFromCart(updatedItem.id)) 
-    }
-  }
-
-  const updateLocalItem = (updatedItem) => {
-    const updatedItems = filteredItems.map((item) =>
-      item.id === updatedItem.id ? { ...item, amount: updatedItem.amount } : item
-    )
-    setFilteredItems(updatedItems)
-  }
+  };
+  
+  
 
   const handleFilter = (category) => {
-    setFilter(category)
-  }
+    setFilter(category);
+  };
 
   return (
     <div>
@@ -85,7 +110,7 @@ const ItemList = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ItemList
+export default ItemList;

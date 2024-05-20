@@ -1,0 +1,124 @@
+.container {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+.nav {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.link {
+    text-decoration: none;
+    background: rgb(144, 205, 255);
+    color: black;
+    width: 40%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+}
+.tabs button{
+    padding: 10px;
+    background-color: rgb(144, 205, 255);
+    border-radius: 5px;
+    border: none;
+}
+.wrapper {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.item {
+    padding: 10px;
+    width: 40%;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+.item img {
+    width: 90px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+.flex {
+    display: flex;
+}
+.jcsb {
+    justify-content: space-between;
+}
+.aic {
+    align-items: center;
+}
+.add {
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.3);
+    color: black;
+    padding: 2px 0 2px 5px;
+    border-radius: 10px;
+}
+.add button {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 1px;
+    background: rgb(144, 205, 255);
+    border: none;
+    border-radius: 20px;
+}
+.cart-item {
+    position: relative;
+    display: flex;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.cart-wrapper {
+    width: 25%;
+    margin-right: 20px;
+}
+.cart-item img{
+    width: 55px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+.cart-cost {
+    background: rgb(144, 205, 255);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+    padding: 10px 5px;
+    border-radius: 5px;
+}
+.cart-cost button {
+    height: 50%;
+}
+.modal {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    background: white;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

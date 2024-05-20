@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "id": "1",
+      "name": "Apple",
+      "category": "fruits",
+      "amount": 1,
+      "cost": 1
+    },
+    {
+      "id": "2",
+      "name": "Orange",
+      "category": "fruits",
+      "amount": 0,
+      "cost": 2
+    },
+    {
+      "id": "3",
+      "name": "Tomato",
+      "category": "vegetables",
+      "amount": 0,
+      "cost": 1
+    },
+    {
+      "id": "4",
+      "name": "Carrot",
+      "category": "vegetables",
+      "amount": 0,
+      "cost": 1
+    },
+    {
+      "id": "5",
+      "name": "Grape",
+      "category": "fruits",
+      "amount": 0,
+      "cost": 3
+    }
+  ],
+  "cart": [
+    {
+      "id": "1",
+      "name": "Apple",
+      "category": "fruits",
+      "amount": 1,
+      "cost": 1
+    }
+  ]
+}

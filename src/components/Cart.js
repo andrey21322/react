@@ -1,46 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeItemFromCart, updateItemAmount, updateCartItemName, updateItemAmountInItems } from '../slices/cartSlice';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { removeItemFromCart, updateItemAmount, updateCartItemName, updateItemAmountInItems } from '../slices/cartSlice'
 
 const Cart = () => {
-  const dispatch = useDispatch();
-  const [cartData, setCartData] = useState([]);
-  const [editItemId, setEditItemId] = useState(null);
-  const [editItemName, setEditItemName] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const items = useSelector((state) => state.items);
+  const dispatch = useDispatch()
+  const [cartData, setCartData] = useState([])
+  const [editItemId, setEditItemId] = useState(null)
+  const [editItemName, setEditItemName] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     axios.get('http://localhost:5000/cart')
       .then(response => {
-        setCartData(response.data);
+        setCartData(response.data)
       })
       .catch(error => {
-        console.error('Error fetching cart data:', error);
-      });
-  }, []);
+        console.error('Error fetching cart data:', error)
+      })
+  }, [])
 
-  // Функция для обновления количества товара в разделе items
   const updateItemAmountInItemsHandler = async (id, amount) => {
     try {
-      await dispatch(updateItemAmountInItems({ id, amount }));
+      await dispatch(updateItemAmountInItems({ id, amount }))
     } catch (error) {
-      console.error('Error updating item amount in items:', error);
-    }
-  };
-  
-  const updateItemAmountOnServer = async (itemToRemove, amount) => {
-    try {
-      let response = await axios.get(`http://localhost:5000/items/${itemToRemove.id}`)
-
-      await axios.put(`http://localhost:5000/items/${itemToRemove.id}`, {...itemToRemove, name: response.data.name, amount })
-    } catch (error) {
-      console.error('Error updating item amount on server:', error)
+      console.error('Error updating item amount in items:', error)
     }
   }
-  
   
   const updateItemInDB = async (updatedItem) => {
     try {
@@ -54,68 +40,63 @@ const Cart = () => {
     try {
       const updatedCartData = cartData.map((item) =>
         item.id === id ? { ...item, amount: item.amount + 1 } : item
-      );
-      await updateItemInDB(updatedCartData.find((item) => item.id === id));
-      dispatch(updateItemAmount({ id, amount: 1 })); // Dispatch action to update item amount in cart state
-      await dispatch(updateItemAmountInItems({ id, amount: 1 })); // Dispatch action to update item amount in items state
-      setCartData(updatedCartData);
+      )
+      await updateItemInDB(updatedCartData.find((item) => item.id === id))
+      dispatch(updateItemAmount({ id, amount: 1 })) 
+      await dispatch(updateItemAmountInItems({ id, amount: 1 })) 
+      setCartData(updatedCartData)
     } catch (error) {
-      console.error('Error incrementing item amount:', error);
+      console.error('Error incrementing item amount:', error)
     }
-  };
+  }
   
   const handleDecrement = async (id) => {
     try {
       const updatedCartData = cartData.map((item) =>
         item.id === id ? { ...item, amount: item.amount - 1 } : item
-      );
-      await updateItemInDB(updatedCartData.find((item) => item.id === id));
-      dispatch(updateItemAmount({ id, amount: -1 })); // Dispatch action to update item amount in cart state
-      await dispatch(updateItemAmountInItems({ id, amount: -1 })); // Dispatch action to update item amount in items state
-      setCartData(updatedCartData);
+      )
+      await updateItemInDB(updatedCartData.find((item) => item.id === id))
+      dispatch(updateItemAmount({ id, amount: -1 })) 
+      await dispatch(updateItemAmountInItems({ id, amount: -1 })) 
+      setCartData(updatedCartData)
       if (updatedCartData.find((item) => item.id === id).amount === 0) {
-        handleRemove(id);
+        handleRemove(id)
       }
     } catch (error) {
-      console.error('Error decrementing item amount:', error);
+      console.error('Error decrementing item amount:', error)
     }
-  };
+  }
   const handleRemove = async (id) => {
-    const itemToRemove = cartData.find(item => item.id === id);
+    const itemToRemove = cartData.find(item => item.id === id)
     try {
-      // Dispatch action to remove item from the cart state
-      await dispatch(removeItemFromCart(itemToRemove));
+      await dispatch(removeItemFromCart(itemToRemove))
   
-      // Delete item from the database cart
-      await deleteItemFromDatabase(id);
+      await deleteItemFromDatabase(id)
   
-      // Update local state (cartData)
       setCartData(prevCartData =>
         prevCartData.filter(item => item.id !== id)
-      );
+      )
       
-      // Dispatch action to update item amount in items
       console.log(itemToRemove)
       if(itemToRemove.amount === 0) {
-        await updateItemAmountInItemsHandler(id, -itemToRemove.amount);
+        await updateItemAmountInItemsHandler(id, -itemToRemove.amount)
       } else {
-        await updateItemAmountInItemsHandler(id, -itemToRemove.amount);
+        await updateItemAmountInItemsHandler(id, -itemToRemove.amount)
       }
       
     } catch (error) {
-      console.error('Error removing item from cart:', error);
+      console.error('Error removing item from cart:', error)
     }
-  };
+  }
   
   const deleteItemFromDatabase = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/cart/${id}`);
+      await axios.delete(`http://localhost:5000/cart/${id}`)
     } catch (error) {
-      console.error('Error deleting item from database:', error);
+      console.error('Error deleting item from database:', error)
     }
-  };
+  }
   
-
   const handleEdit = (id, name) => {
     setEditItemId(id)
     setEditItemName(name)
